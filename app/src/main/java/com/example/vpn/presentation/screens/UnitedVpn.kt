@@ -1,7 +1,25 @@
 package com.example.vpn.presentation.screens
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.MenuOpen
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,7 +27,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.vpn.R
 import com.example.vpn.domain.model.UnitedState
 import com.example.vpn.domain.usecase.ResultState
@@ -22,6 +47,8 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UnitedVpn() {
     val viewModel: MainViewModel = koinInject()
@@ -72,7 +99,7 @@ fun UnitedVpn() {
         }
     )
 
-    rewardedAd?.fullScreenContentCallback=object :FullScreenContentCallback(){
+    rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
         override fun onAdClicked() {
             super.onAdClicked()
         }
@@ -93,4 +120,54 @@ fun UnitedVpn() {
             super.onAdShowedFullScreenContent()
         }
     }
+
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = "Vpn",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            },
+            navigationIcon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.MenuOpen,
+                    contentDescription = "",
+                    tint = Color.White
+                )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0XFF0b98fa))
+        )
+    }) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scroll)
+                .background(Color.White)
+                .padding(top = it.calculateTopPadding(), bottom = 2.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(
+                        RoundedCornerShape(
+                            bottomStart = 200.dp, bottomEnd = 200.dp
+                        )
+                    )
+                    .fillMaxWidth()
+                    .background(Color(0XFF0b98fa))
+                    .height(290.dp),
+                contentAlignment = Alignment.Center
+            ){
+
+            }
+
+        }
+
+    }
 }
+
+
