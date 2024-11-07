@@ -1,6 +1,8 @@
 package com.example.vpn.presentation.screens
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -211,7 +213,7 @@ open class VpnService : Service() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
-        startForeground(1,notification)
+        startForeground(1, notification)
 
         return START_STICKY
     }
@@ -222,9 +224,18 @@ open class VpnService : Service() {
     }
 
     private fun createNotificationChannel() {
-        TODO("Not yet implemented")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = "VPN Channel"
+            val channelDescription = "Shows the VPN Connection status"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("vpn_channel_id", channelName, importance).apply {
+                description = channelDescription
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
-
 }
 
 
