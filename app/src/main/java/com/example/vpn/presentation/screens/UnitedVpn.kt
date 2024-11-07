@@ -1,6 +1,7 @@
 package com.example.vpn.presentation.screens
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -9,15 +10,23 @@ import android.content.Intent
 import android.net.VpnService
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,7 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +63,7 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.koin.compose.koinInject
@@ -172,7 +184,83 @@ fun UnitedVpn() {
                 contentAlignment = Alignment.Center
             ) {
                 Column {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(120.dp)
+                            .clickable {
+                                if (!isConnected) {
+                                    startVpnService(context)
+                                } else {
+                                    stopVpnService(context)
+                                }
 
+                                if (rewardedAd != null) {
+                                    rewardedAd?.show(
+                                        context as Activity,
+                                        OnUserEarnedRewardListener { }
+                                    )
+                                } else {
+                                    Log.d("AdLoad", "Rewarded ad was not loaded yet.")
+                                }
+                                if (isConnected) {
+                                    viewModel.disconnectVpn()
+                                    isConnected = false
+                                } else {
+                                    viewModel.getUnitedVpn()
+                                    isConnected = true
+                                }
+                                isLoading = true
+
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.whitecircal),
+                            contentDescription = "",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                        if (!isConnected) {
+                            Image(
+                                painter = painterResource(id = R.drawable.power),
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.Center,
+                                modifier = Modifier.size(50.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(id = selectedCountryFlag),
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.Center,
+                                modifier = Modifier.size(120.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(15.dp))
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .size(8.dp)
+                                .background(
+                                    if (!isLoading && isConnected) Color.Green else Color.Red
+                                )
+                        )
+
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        Text(
+                            text = if (isConnected) "Connected" else "Disconnected",
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
 
