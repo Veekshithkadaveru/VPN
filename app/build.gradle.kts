@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.vpn"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.vpn"
@@ -55,18 +55,18 @@ dependencies {
     // Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
 // Jetpack Compose
     implementation(libs.androidx.activity.compose)
-    implementation("androidx.activity:activity-compose:1.9.1")
+    implementation("androidx.activity:activity-compose:1.9.3")
     implementation(platform(libs.androidx.compose.bom))
-    implementation("androidx.compose.ui:ui:1.7.4")
-    implementation("androidx.compose.ui:ui-graphics:1.7.4")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.7.4")
+    implementation("androidx.compose.ui:ui:1.7.5")
+    implementation("androidx.compose.ui:ui-graphics:1.7.5")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.5")
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.material:material-icons-extended:1.7.4")
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
 
 // Testing dependencies
     testImplementation(libs.junit)
@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.ktor.client.android)
 
 // Navigation and UI Libraries
-    val nav_version = "2.7.7"
+    val nav_version = "2.8.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("io.coil-kt:coil-gif:2.4.0")
