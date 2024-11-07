@@ -1,6 +1,12 @@
 package com.example.vpn.presentation.screens
 
 import android.annotation.SuppressLint
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.net.VpnService
+import android.os.Build
+import android.os.IBinder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationCompat
 import com.example.vpn.R
 import com.example.vpn.domain.model.UnitedState
 import com.example.vpn.domain.usecase.ResultState
@@ -161,13 +168,63 @@ fun UnitedVpn() {
                     .background(Color(0XFF0b98fa))
                     .height(290.dp),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
+                Column {
 
+                }
             }
 
         }
-
     }
+}
+
+fun startVpnService(context: Context) {
+    val intent = Intent(context, VpnService::class.java)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        context.startForegroundService(intent)
+    } else {
+        context.startService(intent)
+    }
+}
+
+fun stopVpnService(context: Context) {
+    val intent = Intent(context, VpnService::class.java)
+    context.stopService(intent)
+}
+
+open class VpnService : Service() {
+    override fun onBind(p0: Intent?): IBinder? {
+        return null
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val notification = NotificationCompat
+            .Builder(this, "vpn_channel_id")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("VPN Connected")
+            .setContentText("VPN is running")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+
+        startForeground(1,notification)
+
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopForeground(true)
+    }
+
+    private fun createNotificationChannel() {
+        TODO("Not yet implemented")
+    }
+
 }
 
 
