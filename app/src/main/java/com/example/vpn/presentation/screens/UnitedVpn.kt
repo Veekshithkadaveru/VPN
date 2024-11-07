@@ -13,12 +13,14 @@ import android.os.IBinder
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +33,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuOpen
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -59,6 +62,8 @@ import com.example.vpn.R
 import com.example.vpn.domain.model.UnitedState
 import com.example.vpn.domain.usecase.ResultState
 import com.example.vpn.presentation.viewmodel.MainViewModel
+import com.example.vpn.utils.Constants.DOWNLOAD
+import com.example.vpn.utils.Constants.UPLOAD
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -67,6 +72,7 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.koin.compose.koinInject
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -91,11 +97,9 @@ fun UnitedVpn() {
             Text(text = error.toString())
             isLoading = false
         }
-
         ResultState.Loading -> {
             isLoading = true
         }
-
         is ResultState.Success -> {
             val success = (state as ResultState.Success).success
             unitedData = success
@@ -121,25 +125,11 @@ fun UnitedVpn() {
     )
 
     rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-        override fun onAdClicked() {
-            super.onAdClicked()
-        }
-
-        override fun onAdDismissedFullScreenContent() {
-            super.onAdDismissedFullScreenContent()
-        }
-
-        override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-            super.onAdFailedToShowFullScreenContent(p0)
-        }
-
-        override fun onAdImpression() {
-            super.onAdImpression()
-        }
-
-        override fun onAdShowedFullScreenContent() {
-            super.onAdShowedFullScreenContent()
-        }
+        override fun onAdClicked() {}
+        override fun onAdDismissedFullScreenContent() {}
+        override fun onAdFailedToShowFullScreenContent(p0: AdError) {}
+        override fun onAdImpression() {}
+        override fun onAdShowedFullScreenContent() {}
     }
 
     Scaffold(topBar = {
@@ -243,7 +233,6 @@ fun UnitedVpn() {
                     Spacer(modifier = Modifier.height(15.dp))
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
-
                         Box(
                             modifier = Modifier
                                 .clip(CircleShape)
@@ -264,9 +253,103 @@ fun UnitedVpn() {
                 }
             }
 
+            Text(
+                text = "Speed",
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 110.dp, top = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(22.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text(text = "Download", color = Color(0XFF61bffc))
+                    Text(
+                        text = if (isConnected) DOWNLOAD.toString() else "- - -",
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.Gray,
+                        fontSize = 23.sp
+                    )
+                    Text(text = "mbs", color = Color.Gray, fontSize = 15.sp)
+                }
+
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .fillMaxHeight()
+                        .background(Color.Gray)
+                )
+
+
+                Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Text(text = "Upload", color = Color(0XFF61bffc))
+                    Text(
+                        text = if (isConnected) UPLOAD.toString() else "- - -",
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.Gray,
+                        fontSize = 23.sp
+                    )
+                    Text(text = "mbs", color = Color.Gray, fontSize = 15.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(17.dp))
+
+            Text(text = "Location", color = Color.Gray, fontSize = 20.sp)
+
+            Image(
+                painter = painterResource(id = R.drawable.map),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            Row(
+                modifier = Modifier
+                    .width(230.dp)
+                    .height(55.dp)
+                    .border(3.dp, color = Color(0XFF61bffc), shape = RoundedCornerShape(23.dp)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Image(
+                    painter = painterResource(id = selectedCountryFlag),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clip(CircleShape)
+                )
+                Text(
+                    text = selectedCountry,
+                    color = Color.Gray,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Icon(
+                    imageVector = Icons.Outlined.KeyboardArrowDown,
+                    contentDescription = "",
+                    tint = Color.Gray
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
+
+
+
 
 fun startVpnService(context: Context) {
     val intent = Intent(context, VpnService::class.java)
