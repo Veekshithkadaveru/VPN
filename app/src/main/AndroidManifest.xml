@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      <!--  <service
-            android:name=".presentation.ui.screens.MyVpnService"
+        <service
+            android:name=".presentation.screens.VpnService"
             android:exported="true"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
@@ -34,7 +34,7 @@
         </service>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/> -->
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
     </application>
 
 </manifest>
