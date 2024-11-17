@@ -35,8 +35,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.MenuOpen
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -97,9 +99,11 @@ fun UnitedVpn() {
             Text(text = error.toString())
             isLoading = false
         }
+
         ResultState.Loading -> {
             isLoading = true
         }
+
         is ResultState.Success -> {
             val success = (state as ResultState.Success).success
             unitedData = success
@@ -318,7 +322,10 @@ fun UnitedVpn() {
                 modifier = Modifier
                     .width(230.dp)
                     .height(55.dp)
-                    .border(3.dp, color = Color(0XFF61bffc), shape = RoundedCornerShape(23.dp)),
+                    .border(
+                        3.dp, color = Color(0XFF61bffc),
+                        shape = RoundedCornerShape(23.dp)
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -339,16 +346,75 @@ fun UnitedVpn() {
                 Icon(
                     imageVector = Icons.Outlined.KeyboardArrowDown,
                     contentDescription = "",
-                    tint = Color.Gray
+                    tint = Color.Gray,
+                    modifier = Modifier.clickable { bottomNavigation = true }
                 )
             }
+        }
+    }
 
-            Spacer(modifier = Modifier.height(8.dp))
+    if (bottomNavigation) {
+        ModalBottomSheet(onDismissRequest = { bottomNavigation = false }) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Choose country", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+            }
+            Spacer(modifier = Modifier.height(7.dp))
+
+            Divider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = Color.Gray,
+                thickness = 1.dp
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val countries = listOf(
+                    "Albania" to R.drawable.albania,
+                    "United State" to R.drawable.unitedflag,
+                    "Argentina" to R.drawable.argentina,
+                    "Australia" to R.drawable.australia,
+                    "Belarus" to R.drawable.belarus,
+                    "Belgium" to R.drawable.belgium,
+                    "Bosnia" to R.drawable.bosnia
+                )
+
+                countries.forEach { (country, flag) ->
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            viewModel.disconnectVpn()
+                            selectedCountry = country
+                            selectedCountryFlag = flag
+                            bottomNavigation = false
+                        }
+                        .padding(start = 25.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Image(
+                            painter = painterResource(id = flag),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clip(CircleShape)
+                        )
+
+                        Text(text = country, fontSize = 18.sp)
+                    }
+
+                }
+            }
         }
     }
 }
-
-
 
 
 fun startVpnService(context: Context) {
@@ -408,5 +474,3 @@ open class VpnService : Service() {
         }
     }
 }
-
-
