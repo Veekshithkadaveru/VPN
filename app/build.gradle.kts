@@ -55,8 +55,6 @@ dependencies {
     // Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
 
 // Jetpack Compose
     implementation(libs.androidx.activity.compose)

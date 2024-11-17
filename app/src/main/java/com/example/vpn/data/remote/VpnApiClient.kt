@@ -47,7 +47,9 @@ object VpnApiClient {
     }
 
     suspend fun getUnitedStates(): UnitedState {
-        return client.get("https://vpnapi.io/api/8.8.8.8?key=$API_KEY").body<UnitedState>()
+        return client
+            .get("https://vpnapi.io/api/8.8.8.8?key=$API_KEY")
+            .body<UnitedState>()
     }
 
     suspend fun disconnect(): String {

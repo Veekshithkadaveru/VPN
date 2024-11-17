@@ -3,6 +3,6 @@
 
 
     <style name="Theme.VPN" parent="android:Theme.Material.Light.NoActionBar">
-    <item name="android:windowSplashScreenBackground" tools:targetApi="s">@color/white</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">@color/white</item>
     </style>
 </resources>

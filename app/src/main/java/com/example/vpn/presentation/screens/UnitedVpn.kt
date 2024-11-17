@@ -290,7 +290,6 @@ fun UnitedVpn() {
                         .background(Color.Gray)
                 )
 
-
                 Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(text = "Upload", color = Color(0XFF61bffc))
                     Text(
@@ -409,7 +408,6 @@ fun UnitedVpn() {
 
                         Text(text = country, fontSize = 18.sp)
                     }
-
                 }
             }
         }
@@ -441,6 +439,7 @@ open class VpnService : Service() {
         createNotificationChannel()
     }
 
+    @SuppressLint("ForegroundServiceType")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notification = NotificationCompat
             .Builder(this, "vpn_channel_id")
@@ -465,9 +464,10 @@ open class VpnService : Service() {
             val channelName = "VPN Channel"
             val channelDescription = "Shows the VPN Connection status"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("vpn_channel_id", channelName, importance).apply {
-                description = channelDescription
-            }
+            val channel =
+                NotificationChannel("vpn_channel_id", channelName, importance).apply {
+                    description = channelDescription
+                }
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
